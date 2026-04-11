@@ -1,0 +1,143 @@
+{
+  "communities": {
+    "0": [
+      "i2s_connection_i2s_connection",
+      "laser_sensor_main_logic",
+      "ota_connection_ota_header",
+      "ota_connection_ota_impl",
+      "parkinglot_design",
+      "platformio_esp32_parkinglot"
+    ],
+    "1": [
+      "ota_connection",
+      "ota_connection_handleota",
+      "ota_connection_initota"
+    ],
+    "2": [
+      "laser_sensor",
+      "laser_sensor_loop",
+      "laser_sensor_setup"
+    ]
+  },
+  "cohesion": {
+    "0": 0.47,
+    "1": 1.0,
+    "2": 0.67
+  },
+  "gods": [
+    {
+      "id": "laser_sensor_main_logic",
+      "label": "Laser Sensor Main Logic",
+      "edges": 5
+    },
+    {
+      "id": "ota_connection_ota_impl",
+      "label": "OTA Connection Implementation",
+      "edges": 3
+    },
+    {
+      "id": "platformio_esp32_parkinglot",
+      "label": "PlatformIO Configuration (esp32_parkinglot)",
+      "edges": 2
+    },
+    {
+      "id": "ota_connection_ota_header",
+      "label": "OTA Connection Header",
+      "edges": 2
+    },
+    {
+      "id": "i2s_connection_i2s_connection",
+      "label": "I2S Connection Verilog Module",
+      "edges": 1
+    },
+    {
+      "id": "parkinglot_design",
+      "label": "Parking Lot CAD Drawing",
+      "edges": 1
+    }
+  ],
+  "surprises": [
+    {
+      "source": "I2S Connection Verilog Module",
+      "target": "Laser Sensor Main Logic",
+      "source_files": [
+        "verilog/i2s_connection.v",
+        "src/laser_sensor.cpp"
+      ],
+      "confidence": "AMBIGUOUS",
+      "relation": "semantically_similar_to",
+      "why": "ambiguous connection - not explicitly stated in source; crosses file types (doc \u2194 code); connects across different repos/directories; semantically similar concepts with no structural link; peripheral node `I2S Connection Verilog Module` unexpectedly reaches hub `Laser Sensor Main Logic`"
+    },
+    {
+      "source": "PlatformIO Configuration (esp32_parkinglot)",
+      "target": "Laser Sensor Main Logic",
+      "source_files": [
+        "platformio.ini",
+        "src/laser_sensor.cpp"
+      ],
+      "confidence": "INFERRED",
+      "relation": "references",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (doc \u2194 code); connects across different repos/directories; peripheral node `PlatformIO Configuration (esp32_parkinglot)` unexpectedly reaches hub `Laser Sensor Main Logic`"
+    },
+    {
+      "source": "Laser Sensor Main Logic",
+      "target": "Parking Lot CAD Drawing",
+      "source_files": [
+        "src/laser_sensor.cpp",
+        "CAD/ParkingLot_Page__.svg"
+      ],
+      "confidence": "INFERRED",
+      "relation": "conceptually_related_to",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (code \u2194 image); connects across different repos/directories; peripheral node `Parking Lot CAD Drawing` unexpectedly reaches hub `Laser Sensor Main Logic`"
+    },
+    {
+      "source": "PlatformIO Configuration (esp32_parkinglot)",
+      "target": "OTA Connection Implementation",
+      "source_files": [
+        "platformio.ini",
+        "src/ota_connection.cpp"
+      ],
+      "confidence": "INFERRED",
+      "relation": "references",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (doc \u2194 code); connects across different repos/directories"
+    },
+    {
+      "source": "Laser Sensor Main Logic",
+      "target": "OTA Connection Header",
+      "source_files": [
+        "src/laser_sensor.cpp",
+        "include/ota_connection.h"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "connects across different repos/directories; peripheral node `OTA Connection Header` unexpectedly reaches hub `Laser Sensor Main Logic`"
+    }
+  ],
+  "questions": [
+    {
+      "type": "ambiguous_edge",
+      "question": "What is the exact relationship between `I2S Connection Verilog Module` and `Laser Sensor Main Logic`?",
+      "why": "Edge tagged AMBIGUOUS (relation: semantically_similar_to) - confidence is low."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 3 inferred relationships involving `Laser Sensor Main Logic` (e.g. with `OTA Connection Implementation` and `PlatformIO Configuration (esp32_parkinglot)`) actually correct?",
+      "why": "`Laser Sensor Main Logic` has 3 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 2 inferred relationships involving `OTA Connection Implementation` (e.g. with `Laser Sensor Main Logic` and `PlatformIO Configuration (esp32_parkinglot)`) actually correct?",
+      "why": "`OTA Connection Implementation` has 2 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 2 inferred relationships involving `PlatformIO Configuration (esp32_parkinglot)` (e.g. with `Laser Sensor Main Logic` and `OTA Connection Implementation`) actually correct?",
+      "why": "`PlatformIO Configuration (esp32_parkinglot)` has 2 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `I2S Connection Verilog Module`, `Parking Lot CAD Drawing` to the rest of the system?",
+      "why": "2 weakly-connected nodes found - possible documentation gaps or missing edges."
+    }
+  ]
+}

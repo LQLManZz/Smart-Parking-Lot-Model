@@ -1,0 +1,273 @@
+{
+  "nodes": [
+    {
+      "id": "ota_connection",
+      "label": "ota_connection.h",
+      "file_type": "code",
+      "source_file": "include\\ota_connection.h",
+      "source_location": "L1"
+    },
+    {
+      "id": "laser_sensor",
+      "label": "laser_sensor.cpp",
+      "file_type": "code",
+      "source_file": "src\\laser_sensor.cpp",
+      "source_location": "L1"
+    },
+    {
+      "id": "laser_sensor_setup",
+      "label": "setup()",
+      "file_type": "code",
+      "source_file": "src\\laser_sensor.cpp",
+      "source_location": "L15"
+    },
+    {
+      "id": "laser_sensor_loop",
+      "label": "loop()",
+      "file_type": "code",
+      "source_file": "src\\laser_sensor.cpp",
+      "source_location": "L24"
+    },
+    {
+      "id": "ota_connection",
+      "label": "ota_connection.cpp",
+      "file_type": "code",
+      "source_file": "src\\ota_connection.cpp",
+      "source_location": "L1"
+    },
+    {
+      "id": "ota_connection_initota",
+      "label": "initOTA()",
+      "file_type": "code",
+      "source_file": "src\\ota_connection.cpp",
+      "source_location": "L5"
+    },
+    {
+      "id": "ota_connection_handleota",
+      "label": "handleOTA()",
+      "file_type": "code",
+      "source_file": "src\\ota_connection.cpp",
+      "source_location": "L58"
+    },
+    {
+      "id": "i2s_connection_i2s_connection",
+      "label": "I2S Connection Verilog Module",
+      "file_type": "code",
+      "source_file": "verilog/i2s_connection.v",
+      "source_location": null
+    },
+    {
+      "id": "platformio_esp32_parkinglot",
+      "label": "PlatformIO Configuration (esp32_parkinglot)",
+      "file_type": "code",
+      "source_file": "platformio.ini",
+      "source_location": null
+    },
+    {
+      "id": "laser_sensor_main_logic",
+      "label": "Laser Sensor Main Logic",
+      "file_type": "code",
+      "source_file": "src/laser_sensor.cpp",
+      "source_location": null
+    },
+    {
+      "id": "ota_connection_ota_impl",
+      "label": "OTA Connection Implementation",
+      "file_type": "code",
+      "source_file": "src/ota_connection.cpp",
+      "source_location": null
+    },
+    {
+      "id": "ota_connection_ota_header",
+      "label": "OTA Connection Header",
+      "file_type": "code",
+      "source_file": "include/ota_connection.h",
+      "source_location": null
+    },
+    {
+      "id": "parkinglot_design",
+      "label": "Parking Lot CAD Drawing",
+      "file_type": "image",
+      "source_file": "CAD/ParkingLot_Page__.svg",
+      "source_location": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "ota_connection",
+      "target": "arduino",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "include\\ota_connection.h",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "laser_sensor",
+      "target": "arduino",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\laser_sensor.cpp",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "laser_sensor",
+      "target": "ota_connection",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\laser_sensor.cpp",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "laser_sensor",
+      "target": "adafruit_gfx",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\laser_sensor.cpp",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "laser_sensor",
+      "target": "adafruit_ssd1306",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\laser_sensor.cpp",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "laser_sensor",
+      "target": "wifi",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\laser_sensor.cpp",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "laser_sensor",
+      "target": "laser_sensor_setup",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\laser_sensor.cpp",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "laser_sensor",
+      "target": "laser_sensor_loop",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\laser_sensor.cpp",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "ota_connection",
+      "target": "ota_connection",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\ota_connection.cpp",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "ota_connection",
+      "target": "wifi",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\ota_connection.cpp",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "ota_connection",
+      "target": "arduinoota",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\ota_connection.cpp",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "ota_connection",
+      "target": "ota_connection_initota",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\ota_connection.cpp",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "ota_connection",
+      "target": "ota_connection_handleota",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\ota_connection.cpp",
+      "source_location": "L58",
+      "weight": 1.0
+    },
+    {
+      "source": "laser_sensor_main_logic",
+      "target": "ota_connection_ota_header",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/laser_sensor.cpp"
+    },
+    {
+      "source": "ota_connection_ota_impl",
+      "target": "ota_connection_ota_header",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ota_connection.cpp"
+    },
+    {
+      "source": "laser_sensor_main_logic",
+      "target": "ota_connection_ota_impl",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/laser_sensor.cpp"
+    },
+    {
+      "source": "platformio_esp32_parkinglot",
+      "target": "laser_sensor_main_logic",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "platformio.ini"
+    },
+    {
+      "source": "laser_sensor_main_logic",
+      "target": "parkinglot_design",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/laser_sensor.cpp"
+    },
+    {
+      "source": "i2s_connection_i2s_connection",
+      "target": "laser_sensor_main_logic",
+      "relation": "semantically_similar_to",
+      "confidence": "AMBIGUOUS",
+      "confidence_score": 0.3,
+      "source_file": "verilog/i2s_connection.v"
+    },
+    {
+      "source": "platformio_esp32_parkinglot",
+      "target": "ota_connection_ota_impl",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "platformio.ini"
+    }
+  ],
+  "hyperedges": [],
+  "input_tokens": 0,
+  "output_tokens": 0
+}
