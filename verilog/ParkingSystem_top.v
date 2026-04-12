@@ -18,11 +18,15 @@ module topModule (
     f2,
     g2,
     barier1,
+    i2s_bclk,
+    i2s_lrck,
+    i2s_din,
     output [7:0] led  // kiem tra trang thai 
 );
   wire vao, ra;
-  wire control;
+  wire       control;
   wire [1:0] s;
+  wire [3:0] current_signal;
   assign s = {sensor1, sensor0};
   TN_HDL_FSM fsm (
       .clk(clk),
@@ -31,7 +35,8 @@ module topModule (
       .vao(vao),
       .ra(ra),
       .barier1(control),
-      .led(led)
+      .led(led),
+      .output_signal(current_signal)
   );
   Barier Barier1 (
       .clk(clk),
@@ -58,5 +63,13 @@ module topModule (
       .f2(f2),
       .g1(g1),
       .g2(g2)
+  );
+  i2s_connection speaker (
+      .clk(clk),
+      .rst_n(rst),
+      .signal(current_signal),
+      .i2s_bclk(i2s_bclk),
+      .i2s_lrck(i2s_lrck),
+      .i2s_din(i2s_din)
   );
 endmodule

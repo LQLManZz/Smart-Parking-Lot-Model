@@ -1,20 +1,20 @@
 module i2s_connection (
-    input  wire clk,
-    input  wire rst_n,
-    output reg  i2s_bclk,  // Bit Clock
-    output reg  i2s_lrck,  // Left Right Clock
-    output reg  i2s_din    // Serial Data In
+    input            clk,
+    input            rst_n,
+    input      [3:0] signal,
+    output reg       i2s_bclk,
+    output reg       i2s_lrck,
+    output reg       i2s_din
 );
 
-  // Bo chia tan so
+  // Bo chia tan so de tao BCLK
   reg [4:0] bclk_div;
-
   always @(posedge clk or negedge rst_n) begin
     if (!rst_n) bclk_div <= 5'd0;
     else bclk_div <= bclk_div + 1'b1;
   end
 
-  // Tao xung de dao trang thai BCLK
+  // Tao xung de dao trang thai BCLK tai cuoi chu ky chia
   wire bclk_toggle = (bclk_div == 5'd31);
 
   always @(posedge clk or negedge rst_n) begin
@@ -22,8 +22,7 @@ module i2s_connection (
     else if (bclk_toggle) i2s_bclk <= ~i2s_bclk;
   end
 
-  // Bo dem bit tu 0 den 31
-  // Du lieu thay doi tai suon xuong cua BCLK
+  // Phat hien suon xuong cua BCLK de cap nhat du lieu SD
   wire bclk_falling = (bclk_toggle && i2s_bclk == 1'b1);
   reg [4:0] bit_cnt;
 
@@ -32,8 +31,7 @@ module i2s_connection (
     else if (bclk_falling) bit_cnt <= bit_cnt + 1'b1;
   end
 
-  // Tao tin hieu LRCK de phan biet kenh trai va phai
-  // 0 la kenh trai, 1 la kenh phai
+  // Tao tin hieu LRCK de phan biet kenh trai (0) va phai (1)
   always @(posedge clk or negedge rst_n) begin
     if (!rst_n) i2s_lrck <= 1'b0;
     else if (bclk_falling) begin
@@ -42,32 +40,79 @@ module i2s_connection (
     end
   end
 
-  // Bo tao am thanh don gian hinh song vuong
-  reg [ 6:0] tone_cnt;
-  reg [15:0] audio_sample;
+  // Ket noi voi cac module ROM chua am thanh
+  wire [14:0] rom_addr;
+  reg playing;
+  wire [15:0] audio_welcome, audio_luilai, audio_goodbye;
+
+  my_audio #(
+      .FILENAME("welcome.mem")
+  ) welcome (
+      .clk(clk),
+      .address(rom_addr),
+      .data_out(audio_welcome)
+  );
+
+  my_audio #(
+      .FILENAME("luilai.mem")
+  ) luilai (
+      .clk(clk),
+      .address(rom_addr),
+      .data_out(audio_luilai)
+  );
+
+  my_audio #(
+      .FILENAME("goodbye.mem")
+  ) goodbye (
+      .clk(clk),
+      .address(rom_addr),
+      .data_out(audio_goodbye)
+  );
+
+  // Phat hien su thay doi cua tin hieu dau vao de bat dau phat am thanh
+  reg [3:0] last_signal;
+  wire signal_changed = (signal != last_signal && signal != 4'b0000);
 
   always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) last_signal <= 4'd0;
+    else last_signal <= signal;
+  end
+
+  // Tin hieu yeu cau mau tiep theo tai cuoi moi frame
+  wire req_next = (bclk_falling && bit_cnt == 5'd31);
+  reg [14:0] rom_addr_reg;
+  assign rom_addr = rom_addr_reg;
+
+  // Bo dieu khien playback
+  always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
-      tone_cnt <= 7'd0;
-      audio_sample <= 16'h0000;
-    end else if (bclk_falling && bit_cnt == 5'd31) begin
-      // Cap nhat mau am thanh sau moi chu ky frame
-      tone_cnt <= tone_cnt + 1'b1;
-      if (tone_cnt == 7'd100) begin
-        tone_cnt <= 7'd0;
-        // Dao bien do am thanh de tao tieng bip
-        if (audio_sample == 16'h1FFF) audio_sample <= 16'hE000;
-        else audio_sample <= 16'h1FFF;
+      rom_addr_reg <= 15'd0;
+      playing <= 1'b0;
+    end else if (signal_changed) begin
+      // Reset ve dau file am thanh khi co tin hieu moi
+      rom_addr_reg <= 15'd0;
+      playing <= 1'b1;
+    end else if (playing && req_next) begin
+      // Dung phat khi het bo nho (32767 samples)
+      if (rom_addr_reg == 15'd32767) begin
+        playing <= 1'b0;
+      end else begin
+        rom_addr_reg <= rom_addr_reg + 1'b1;
       end
     end
   end
 
-  // Day du lieu ra ngoai, bit cao nhat ra truoc
+  // Day du lieu ra chan DIN theo chuan I2S (MSB first)
+  // bit_cnt 0-15 cho kenh trai, 16-31 cho kenh phai
   always @(posedge clk or negedge rst_n) begin
-    if (!rst_n) i2s_din <= 1'b0;
+    if (!rst_n || !playing) i2s_din <= 1'b0;
     else if (bclk_falling) begin
-      // Lay bit tuong ung tu mau am thanh
-      i2s_din <= audio_sample[~bit_cnt[3:0]];
+      case (signal)
+        4'b0001: i2s_din <= audio_welcome[4'd15-bit_cnt[3:0]];
+        4'b0010: i2s_din <= audio_luilai[4'd15-bit_cnt[3:0]];
+        4'b0110: i2s_din <= audio_goodbye[4'd15-bit_cnt[3:0]];
+        default: i2s_din <= 1'b0;
+      endcase
     end
   end
 

@@ -5,7 +5,8 @@ module TN_HDL_FSM (
     output reg vao,
     ra,
     output reg barier1,
-    output reg [7:0] led  // led nay de kiem tra trang thai
+    output reg [7:0] led,  // led nay de kiem tra trang thai
+    output [3:0] output_signal
 );
   localparam [3:0] IDLE = 4'b0000,
                      A0=4'b0001,
@@ -148,5 +149,8 @@ module TN_HDL_FSM (
       default: led = 8'b00000000;
     endcase
   end
+
+  // Lay tin hieu hien tai ra de su dung cho audio
+  assign output_signal = current;
 endmodule
 
