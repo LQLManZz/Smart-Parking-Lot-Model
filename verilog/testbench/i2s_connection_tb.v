@@ -3,69 +3,90 @@
 module tb_i2s_connection;
 
   // ---------------------------------------------------------
-  // Testbench Signals
+  // 1. Declare Testbench Signals
   // ---------------------------------------------------------
-  reg  clk;
-  reg  rst_n;
+  reg clk;
+  reg rst_n;
+  reg [3:0] signal;
 
   wire i2s_bclk;
   wire i2s_lrck;
   wire i2s_din;
 
   // ---------------------------------------------------------
-  // Instantiate the Unit Under Test (UUT)
+  // 2. Instantiate the Unit Under Test (UUT)
   // ---------------------------------------------------------
   i2s_connection uut (
       .clk(clk),
       .rst_n(rst_n),
+      .signal(signal),
       .i2s_bclk(i2s_bclk),
       .i2s_lrck(i2s_lrck),
       .i2s_din(i2s_din)
   );
 
   // ---------------------------------------------------------
-  // Clock Generation
+  // 3. Clock Generation (2 MHz)
   // ---------------------------------------------------------
-  // 50 MHz Clock -> T = 1/50MHz = 20 ns. 
-  // Toggles every 10 ns.
+  // 2 MHz = 500 ns period. 
+  // Toggles every 250 ns.
   initial begin
     clk = 0;
-    forever #10 clk = ~clk;
+    forever #250 clk = ~clk;
   end
 
   // ---------------------------------------------------------
-  // Test Sequence
+  // 4. Main Test Sequence
   // ---------------------------------------------------------
   initial begin
-    // 1. Initialize Inputs
-    rst_n = 0;
-
-    // 2. Wait 100 ns for global reset to propagate
-    #100;
-
-    // 3. Release Reset
-    rst_n = 1;
-    $display("Reset released. Starting I2S transmission...");
-
-    // 4. Run Simulation
-    // One BCLK period = 64 system clk cycles = 1,280 ns.
-    // One Frame (LRCK period) = 32 BCLK periods = 40,960 ns.
-    // The tone amplitude toggles every 100 frames = 4,096,000 ns.
-    // Simulating for 4.5 milliseconds to capture the amplitude toggle.
-    #4500000;
-
-    // 5. End Simulation
-    $display("Simulation complete.");
-    $finish;
-  end
-
-  // ---------------------------------------------------------
-  // Waveform Generation
-  // ---------------------------------------------------------
-  // This generates a .vcd file to view the timing diagrams.
-  initial begin
+    // Setup Waveform Dump
     $dumpfile("tb_i2s_connection.vcd");
     $dumpvars(0, tb_i2s_connection);
+
+    // Initialize inputs
+    rst_n  = 0;
+    signal = 4'b0000;  // IDLE state
+
+    // Wait 1000ns and release reset
+    #1000;
+    rst_n = 1;
+    $display("[%0t] System Reset Released.", $time);
+    #2000;
+
+    // -----------------------------------------------------
+    // Test 1: Car Entering ("Welcome")
+    // -----------------------------------------------------
+    $display("[%0t] Triggering Welcome Audio (State 0001)...", $time);
+    signal = 4'b0001;
+
+    // Wait for several audio frames to shift out.
+    // 1 audio frame = 32 bclk cycles = 128 system clk cycles = 64,000 ns
+    // Waiting 3,200,000 ns = ~50 audio frames
+    #3200000;
+
+    // -----------------------------------------------------
+    // Test 2: Lot is Full / Back Up ("Luilai")
+    // -----------------------------------------------------
+    $display("[%0t] Triggering Luilai Audio (State 0010)...", $time);
+    signal = 4'b0010;
+    #3200000;
+
+    // -----------------------------------------------------
+    // Test 3: Car Leaving ("Goodbye")
+    // -----------------------------------------------------
+    $display("[%0t] Triggering Goodbye Audio (State 0110)...", $time);
+    signal = 4'b0110;
+    #3200000;
+
+    // -----------------------------------------------------
+    // Return to IDLE
+    // -----------------------------------------------------
+    $display("[%0t] Returning to IDLE (State 0000)...", $time);
+    signal = 4'b0000;
+    #1000000;
+
+    $display("[%0t] Simulation Complete.", $time);
+    $finish;
   end
 
 endmodule
