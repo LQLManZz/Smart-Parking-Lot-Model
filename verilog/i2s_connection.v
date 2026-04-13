@@ -8,14 +8,14 @@ module i2s_connection (
 );
 
   // Bo chia tan so de tao BCLK
-  reg [4:0] bclk_div;
+  reg bclk_div;
   always @(posedge clk or negedge rst_n) begin
-    if (!rst_n) bclk_div <= 5'd0;
+    if (!rst_n) bclk_div <= 1'b0;
     else bclk_div <= bclk_div + 1'b1;
   end
 
   // Tao xung de dao trang thai BCLK tai cuoi chu ky chia
-  wire bclk_toggle = (bclk_div == 5'd31);
+  wire bclk_toggle = (bclk_div == 1'b1);
 
   always @(posedge clk or negedge rst_n) begin
     if (!rst_n) i2s_bclk <= 1'b0;
