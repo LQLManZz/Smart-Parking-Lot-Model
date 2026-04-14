@@ -1,6 +1,7 @@
 import wave
 import struct
 import os
+import glob
 
 def convert_mem_to_wav(mem_filename, wav_filename, sample_rate=16000):
     """
@@ -40,14 +41,13 @@ def convert_mem_to_wav(mem_filename, wav_filename, sample_rate=16000):
             
     print(f"Successfully converted {mem_filename} -> {wav_filename}")
 
-# List of your uploaded files
-mem_files = [
-    "goodbye.mem",
-    "luilai.mem",
-    "welcome.mem"
-]
+# Run the conversion for all .mem files in the current directory
+if __name__ == "__main__":
+    mem_files = glob.glob("*.mem")
 
-# Run the conversion
-for mem_file in mem_files:
-    wav_file = mem_file.replace(".mem", ".wav")
-    convert_mem_to_wav(mem_file, wav_file)
+    if not mem_files:
+        print("No .mem files found in the current directory.")
+    else:
+        for mem_file in mem_files:
+            wav_file = os.path.splitext(mem_file)[0] + ".wav"
+            convert_mem_to_wav(mem_file, wav_file)
